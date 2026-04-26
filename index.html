@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brillo Latino - Tarjeta de Fidelidad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Color azul extraído del logo */
+        .color-brillo { color: #2b419b; }
+        .bg-brillo { background-color: #2b419b; }
+        .border-brillo { border-color: #2b419b; }
+        
+        .card-shadow {
+            box-shadow: 0 20px 40px rgba(43, 65, 155, 0.12);
+            border-radius: 2rem;
+        }
+        
+        .stamp-item {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .stamp-active {
+            background-color: #2b419b;
+            transform: scale(1.1) rotate(360deg);
+            box-shadow: 0 8px 15px rgba(43, 65, 155, 0.3);
+        }
+
+        @keyframes pulse-gold {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.4); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(234, 179, 8, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(234, 179, 8, 0); }
+        }
+        .prize-glow {
+            animation: pulse-gold 2s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-sm bg-white card-shadow overflow-hidden border border-slate-50 flex flex-col">
+        
+        <!-- SECCIÓN LOGO -->
+        <div class="p-6 bg-white flex justify-center items-center border-b border-slate-100">
+            <img src="a0a800f4-9c48-4199-9112-4e6c54349361.jpg" alt="Brillo Latino" class="w-full h-auto max-w-[280px] object-contain" id="logoImg">
+        </div>
+
+        <!-- CONTENIDO -->
+        <div class="p-8">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">Tu fidelidad tiene premio</p>
+                    <h2 class="color-brillo text-3xl font-extrabold italic" id="counterDisplay">0 / 10</h2>
+                </div>
+                <div class="bg-blue-50 p-3 rounded-2xl">
+                    <i data-lucide="crown" class="color-brillo w-6 h-6"></i>
+                </div>
+            </div>
+
+            <!-- GRILLA DE SELLOS -->
+            <div class="grid grid-cols-5 gap-3 mb-8" id="stampsGrid">
+                <!-- Generado por JS -->
+            </div>
+
+            <!-- MENSAJES -->
+            <div id="rewardZone" class="hidden p-5 rounded-2xl text-center mb-4 prize-glow bg-yellow-400">
+                <p class="font-black text-sm uppercase italic text-[#2b419b]">¡RECOMPENSA DESBLOQUEADA! 🎁</p>
+                <p class="text-[11px] font-bold text-[#2b419b]/80">Presenta este celular para reclamar tu servicio gratis</p>
+            </div>
+
+            <div id="infoZone" class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-start gap-3">
+                <i data-lucide="sparkles" class="text-yellow-500 w-5 h-5 shrink-0 mt-0.5"></i>
+                <p class="text-slate-500 text-[11px] leading-relaxed font-medium">
+                    Completa 10 visitas en <span class="color-brillo font-bold">Brillo Latino</span> y recibe un servicio de <span class="font-bold underline text-slate-700">Hidratación Profunda</span> totalmente gratis.
+                </p>
+            </div>
+        </div>
+
+        <!-- BOTÓN DE ACCIÓN -->
+        <div class="px-8 pb-8">
+            <button onclick="showAdminModal()" class="w-full bg-brillo text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 active:scale-95 transition-all shadow-lg">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
+                Sellar Visita (Personal)
+            </button>
+            <div class="flex items-center justify-center gap-2 mt-4 opacity-20">
+                <i data-lucide="nfc" class="w-3 h-3 text-slate-800"></i>
+                <span class="text-[8px] font-black uppercase tracking-[0.3em] text-slate-800">NFC Smart Access</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE PIN -->
+    <div id="pinModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm hidden items-center justify-center p-6 z-50">
+        <div class="bg-white w-full max-w-xs rounded-[2rem] p-8 shadow-2xl animate-in zoom-in-95">
+            <h3 class="text-center font-bold color-brillo text-lg mb-1 italic">Personal de Salón</h3>
+            <p class="text-center text-slate-400 text-[10px] mb-6 uppercase tracking-widest font-bold">Introduce el código</p>
+            
+            <input type="password" id="pinField" placeholder="••••" class="w-full text-center text-4xl font-black border-b-2 border-slate-200 pb-2 focus:border-[#2b419b] outline-none mb-4 tracking-[0.4em] color-brillo" maxlength="4" inputmode="numeric">
+            
+            <p id="errorText" class="text-red-500 text-[10px] text-center mb-4 font-black hidden uppercase">PIN Incorrecto</p>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="hideAdminModal()" class="py-3 text-slate-400 font-bold text-[10px] uppercase">Cerrar</button>
+                <button onclick="processStamp()" class="bg-brillo text-white py-3 rounded-xl font-bold text-xs">Confirmar</button>
+            </div>
+            
+            <button onclick="resetApp()" class="w-full mt-10 pt-4 border-t border-slate-100 text-[9px] text-slate-300 flex items-center justify-center gap-2 hover:text-red-400 transition-colors uppercase font-bold">
+                <i data-lucide="refresh-cw" class="w-3 h-3"></i> Reiniciar Tarjeta
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const STAMPS_TO_COMPLETE = 10;
+        const SALON_PIN = "0481"; // PIN por defecto
+        let points = parseInt(localStorage.getItem('brillo_latino_v2')) || 0;
+
+        // Iniciar Lucide
+        lucide.createIcons();
+
+        const grid = document.getElementById('stampsGrid');
+        const counter = document.getElementById('counterDisplay');
+        const rewardZone = document.getElementById('rewardZone');
+        const infoZone = document.getElementById('infoZone');
+        const modal = document.getElementById('pinModal');
+        const pinField = document.getElementById('pinField');
+        const errorText = document.getElementById('errorText');
+
+        function render() {
+            grid.innerHTML = '';
+            for (let i = 0; i < STAMPS_TO_COMPLETE; i++) {
+                const slot = document.createElement('div');
+                const isActive = i < points;
+                
+                slot.className = `stamp-item aspect-square rounded-xl border-2 flex items-center justify-center ${isActive ? 'stamp-active border-brillo' : 'bg-white border-slate-100'}`;
+                
+                const icon = document.createElement('i');
+                icon.setAttribute('data-lucide', isActive ? 'check-circle' : 'scissors');
+                icon.className = `${isActive ? 'text-white' : 'text-slate-100'} w-6 h-6`;
+                
+                slot.appendChild(icon);
+                grid.appendChild(slot);
+            }
+            
+            counter.innerHTML = `${points} <span class="text-slate-200 text-xl font-normal">/ 10</span>`;
+            
+            if (points >= STAMPS_TO_COMPLETE) {
+                rewardZone.classList.remove('hidden');
+                infoZone.classList.add('hidden');
+            } else {
+                rewardZone.classList.add('hidden');
+                infoZone.classList.remove('hidden');
+            }
+            
+            lucide.createIcons();
+            localStorage.setItem('brillo_latino_v2', points);
+        }
+
+        function showAdminModal() {
+            modal.classList.replace('hidden', 'flex');
+            pinField.focus();
+        }
+
+        function hideAdminModal() {
+            modal.classList.replace('flex', 'hidden');
+            pinField.value = '';
+            errorText.classList.add('hidden');
+        }
+
+        function processStamp() {
+            if (pinField.value === SALON_PIN) {
+                if (points < STAMPS_TO_COMPLETE) {
+                    points++;
+                    render();
+                    hideAdminModal();
+                }
+            } else {
+                errorText.classList.remove('hidden');
+                pinField.value = '';
+            }
+        }
+
+        function resetApp() {
+            if (confirm("¿Deseas borrar el progreso de esta tarjeta?")) {
+                points = 0;
+                render();
+                hideAdminModal();
+            }
+        }
+
+        // Detectar si la imagen no carga para avisar
+        document.getElementById('logoImg').onerror = function() {
+            console.error("No se pudo cargar la imagen. Asegúrate de que image_1ff779.png esté en la misma carpeta.");
+        };
+
+        render();
+    </script>
+</body>
+</html>
