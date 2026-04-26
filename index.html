@@ -48,29 +48,24 @@
 
     <div class="w-full max-w-sm bg-white card-shadow overflow-hidden border border-slate-50 flex flex-col">
         
-        <!-- SECCIÓN LOGO -->
         <div class="p-6 bg-white flex justify-center items-center border-b border-slate-100">
             <img src="a0a800f4-9c48-4199-9112-4e6c54349361.jpg" alt="Brillo Latino" class="w-full h-auto max-w-[280px] object-contain" id="logoImg">
         </div>
 
-        <!-- CONTENIDO -->
         <div class="p-8">
             <div class="flex justify-between items-center mb-6">
                 <div>
                     <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">Tu fidelidad tiene premio</p>
-                    <h2 class="color-brillo text-3xl font-extrabold italic" id="counterDisplay">0 / 10</h2>
+                    <h2 class="color-brillo text-3xl font-extrabold italic" id="counterDisplay">0 / 6</h2>
                 </div>
                 <div class="bg-blue-50 p-3 rounded-2xl">
                     <i data-lucide="crown" class="color-brillo w-6 h-6"></i>
                 </div>
             </div>
 
-            <!-- GRILLA DE SELLOS -->
-            <div class="grid grid-cols-5 gap-3 mb-8" id="stampsGrid">
-                <!-- Generado por JS -->
-            </div>
+            <div class="grid grid-cols-3 gap-3 mb-8" id="stampsGrid">
+                </div>
 
-            <!-- MENSAJES -->
             <div id="rewardZone" class="hidden p-5 rounded-2xl text-center mb-4 prize-glow bg-yellow-400">
                 <p class="font-black text-sm uppercase italic text-[#2b419b]">¡RECOMPENSA DESBLOQUEADA! 🎁</p>
                 <p class="text-[11px] font-bold text-[#2b419b]/80">Presenta este celular para reclamar tu servicio gratis</p>
@@ -79,12 +74,11 @@
             <div id="infoZone" class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-start gap-3">
                 <i data-lucide="sparkles" class="text-yellow-500 w-5 h-5 shrink-0 mt-0.5"></i>
                 <p class="text-slate-500 text-[11px] leading-relaxed font-medium">
-                    Completa 10 visitas en <span class="color-brillo font-bold">Brillo Latino</span> y recibe un servicio de <span class="font-bold underline text-slate-700">Hidratación Profunda</span> totalmente gratis.
+                    Completa 6 visitas en <span class="color-brillo font-bold">Brillo Latino</span> y recibe un servicio de <span class="font-bold underline text-slate-700">Hidratación Profunda</span> totalmente gratis.
                 </p>
             </div>
         </div>
 
-        <!-- BOTÓN DE ACCIÓN -->
         <div class="px-8 pb-8">
             <button onclick="showAdminModal()" class="w-full bg-brillo text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 active:scale-95 transition-all shadow-lg">
                 <i data-lucide="shield-check" class="w-5 h-5"></i>
@@ -97,7 +91,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE PIN -->
     <div id="pinModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm hidden items-center justify-center p-6 z-50">
         <div class="bg-white w-full max-w-xs rounded-[2rem] p-8 shadow-2xl animate-in zoom-in-95">
             <h3 class="text-center font-bold color-brillo text-lg mb-1 italic">Personal de Salón</h3>
@@ -119,8 +112,8 @@
     </div>
 
     <script>
-        const STAMPS_TO_COMPLETE = 06;
-        const SALON_PIN = "0481"; // PIN por defecto
+        const STAMPS_TO_COMPLETE = 6; // Modificado a 6
+        const SALON_PIN = "0481"; // Tu PIN
         let points = parseInt(localStorage.getItem('brillo_latino_v2')) || 0;
 
         // Iniciar Lucide
@@ -150,7 +143,8 @@
                 grid.appendChild(slot);
             }
             
-            counter.innerHTML = `${points} <span class="text-slate-200 text-xl font-normal">/ 10</span>`;
+            // Modificado: Ahora muestra / 6
+            counter.innerHTML = `${points} <span class="text-slate-200 text-xl font-normal">/ 6</span>`;
             
             if (points >= STAMPS_TO_COMPLETE) {
                 rewardZone.classList.remove('hidden');
@@ -198,7 +192,7 @@
 
         // Detectar si la imagen no carga para avisar
         document.getElementById('logoImg').onerror = function() {
-            console.error("No se pudo cargar la imagen. Asegúrate de que image_1ff779.png esté en la misma carpeta.");
+            console.error("No se pudo cargar la imagen del logo.");
         };
 
         render();
